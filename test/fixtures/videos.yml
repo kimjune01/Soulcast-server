@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  video_id: MyString
+  epoch: 1
+  user_id: 
+  vanity: MyString
+  hls: MyString
+  webm: MyString
+  title: MyString
+  public_shared: false
+  transcoded: false
+
+two:
+  video_id: MyString
+  epoch: 1
+  user_id: 
+  vanity: MyString
+  hls: MyString
+  webm: MyString
+  title: MyString
+  public_shared: false
+  transcoded: false
