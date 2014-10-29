@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing My Records</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @my_records.each do |my_record| %>
+      <tr>
+        <td><%= my_record.name %></td>
+        <td><%= link_to 'Show', my_record %></td>
+        <td><%= link_to 'Edit', edit_my_record_path(my_record) %></td>
+        <td><%= link_to 'Destroy', my_record, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New My record', new_my_record_path %>

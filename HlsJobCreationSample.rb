@@ -1,19 +1,8 @@
-class Video < ActiveRecord::Base
-  belongs_to :message
+require 'aws-sdk'
+require 'Digest'
 
-  validates :video_key, presence: true, uniqueness: true
-  validates :epoch,    presence: true
-  # validates :user_id,  presence: true
 
-  after_create :transcode
-
-  def punch
-  	puts "punchy punchy ow ow!"
-  end
-
-  def transcode
-
-  	AWS.config({
+AWS.config({
 :access_key_id => 'AKIAIBXNYZVUPKVS6BHA',
 :secret_access_key => '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',
 :region => 'us-west-2',
@@ -104,7 +93,3 @@ job = transcoder_client.create_job(
   playlists: [ playlist ])[:job]
 
 puts 'HLS job has been created: ' + JSON.pretty_generate(job)
-
-  end
-
-end
