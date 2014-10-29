@@ -11,43 +11,48 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141024183005) do
+ActiveRecord::Schema.define(version: 20141029020746) do
 
   create_table "messages", force: true do |t|
     t.string   "content"
-    t.integer  "video_id"
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "from_id"
+    t.integer  "to_id"
   end
 
-  add_index "messages", ["video_id"], name: "index_messages_on_video_id"
+  add_index "messages", ["from_id"], name: "index_messages_on_from_id"
+  add_index "messages", ["to_id"], name: "index_messages_on_to_id"
 
   create_table "users", force: true do |t|
     t.string   "name"
     t.string   "email"
     t.string   "phone"
-    t.boolean  "verified"
+    t.boolean  "verified",   default: false
     t.string   "token"
     t.string   "unique"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "videos", force: true do |t|
-    t.string   "video_id"
+    t.string   "video_key"
     t.integer  "epoch"
-    t.integer  "user_id"
     t.string   "vanity"
     t.string   "hls"
     t.string   "webm"
     t.string   "title"
-    t.boolean  "public_shared"
-    t.boolean  "transcoded"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.integer  "message_id"
+    t.integer  "user_id"
+    t.boolean  "public_shared", default: false
+    t.boolean  "transcoded",    default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.string   "jobID"
   end
 
+  add_index "videos", ["message_id"], name: "index_videos_on_message_id"
   add_index "videos", ["user_id"], name: "index_videos_on_user_id"
 
 end
