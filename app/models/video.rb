@@ -12,6 +12,9 @@ class Video < ActiveRecord::Base
   end
 
   def transcode
+  	# Make a transcode method that takes in params from video object
+  	# Write a test that verifies the presence of a job ID
+  	# video.jobId = response[:jobID]
 
   	AWS.config({
 :access_key_id => 'AKIAIBXNYZVUPKVS6BHA',
@@ -89,7 +92,7 @@ hls_2000k = {
   segment_duration: segment_duration
 }
 
-outputs = [ hls_audio, hls_400k, hls_600k, hls_1000k, hls_1500k, hls_2000k ]
+outputs = [hls_400k]
 playlist = {
   name: 'hls_' + output_key,
   format: 'HLSv3',
@@ -104,6 +107,8 @@ job = transcoder_client.create_job(
   playlists: [ playlist ])[:job]
 
 puts 'HLS job has been created: ' + JSON.pretty_generate(job)
+
+self.jobID = job[:id]
 
   end
 
