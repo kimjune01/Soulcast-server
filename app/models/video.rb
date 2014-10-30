@@ -75,16 +75,16 @@ playlist = {
   output_keys: outputs.map { |output| output[:key] }
 }
 
-# job = transcoder_client.create_job(
-#   pipeline_id: pipeline_id,
-#   input: input,
-#   output_key_prefix: output_key_prefix + output_key + '/',
-#   outputs: outputs,
-#   playlists: [ playlist ])[:job]
+job = transcoder_client.create_job(
+  pipeline_id: pipeline_id,
+  input: input,
+  output_key_prefix: output_key_prefix + output_key + '/',
+  outputs: outputs,
+  playlists: [ playlist ])[:job]
 
-# puts 'HLS job has been created: ' + JSON.pretty_generate(job)
+ puts 'HLS job has been created: ' + JSON.pretty_generate(job)
 
-# self.jobID = job[:id]
+self.jobID = job[:id]
 
   end
 
