@@ -56,39 +56,15 @@ input = { key: input_key }
 #Setup the job outputs using the HLS presets.
 output_key = Digest::SHA256.hexdigest(input_key.encode('UTF-8'))
 
-hls_audio = {
-  key: 'hlsAudio/' + output_key,
-  preset_id: hls_64k_audio_preset_id,
-  segment_duration: segment_duration
-}
-
 hls_400k = {
   key: 'hls0400k/' + output_key,
   preset_id: hls_0400k_preset_id,
   segment_duration: segment_duration
 }
 
-hls_600k = {
-  key: 'hls0600k/' + output_key,
-  preset_id: hls_0600k_preset_id,
-  segment_duration: segment_duration
-}
-
 hls_1000k = {
   key: 'hls1000k/' + output_key,
   preset_id: hls_1000k_preset_id,
-  segment_duration: segment_duration
-}
-
-hls_1500k = {
-  key: 'hls1500k/' + output_key,
-  preset_id: hls_1500k_preset_id,
-  segment_duration: segment_duration
-}
-
-hls_2000k = {
-  key: 'hls2000k/' + output_key,
-  preset_id: hls_2000k_preset_id,
   segment_duration: segment_duration
 }
 
@@ -99,16 +75,16 @@ playlist = {
   output_keys: outputs.map { |output| output[:key] }
 }
 
-job = transcoder_client.create_job(
-  pipeline_id: pipeline_id,
-  input: input,
-  output_key_prefix: output_key_prefix + output_key + '/',
-  outputs: outputs,
-  playlists: [ playlist ])[:job]
+# job = transcoder_client.create_job(
+#   pipeline_id: pipeline_id,
+#   input: input,
+#   output_key_prefix: output_key_prefix + output_key + '/',
+#   outputs: outputs,
+#   playlists: [ playlist ])[:job]
 
-puts 'HLS job has been created: ' + JSON.pretty_generate(job)
+# puts 'HLS job has been created: ' + JSON.pretty_generate(job)
 
-self.jobID = job[:id]
+# self.jobID = job[:id]
 
   end
 
