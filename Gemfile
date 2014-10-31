@@ -46,7 +46,3 @@ group :development, :test do
 	gem 'spring'
 end
 
-group :development do
-  gem 'taps'
-  gem 'rvm'
-end
