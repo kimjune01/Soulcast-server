@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20141029020746) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "messages", force: true do |t|
     t.string   "content"
     t.integer  "user_id"
@@ -22,8 +25,8 @@ ActiveRecord::Schema.define(version: 20141029020746) do
     t.integer  "to_id"
   end
 
-  add_index "messages", ["from_id"], name: "index_messages_on_from_id"
-  add_index "messages", ["to_id"], name: "index_messages_on_to_id"
+  add_index "messages", ["from_id"], name: "index_messages_on_from_id", using: :btree
+  add_index "messages", ["to_id"], name: "index_messages_on_to_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "name"
@@ -52,7 +55,7 @@ ActiveRecord::Schema.define(version: 20141029020746) do
     t.string   "jobID"
   end
 
-  add_index "videos", ["message_id"], name: "index_videos_on_message_id"
-  add_index "videos", ["user_id"], name: "index_videos_on_user_id"
+  add_index "videos", ["message_id"], name: "index_videos_on_message_id", using: :btree
+  add_index "videos", ["user_id"], name: "index_videos_on_user_id", using: :btree
 
 end
