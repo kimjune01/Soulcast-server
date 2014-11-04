@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'aws-sdk'
+gem "aws_sns_subscription"
+
 gem 'rspec-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -37,7 +39,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 
 gem 'rails_12factor', group: :production
-
+gem 'pry'
 group :development, :test do
   gem 'factory_girl_rails'
   gem 'capybara'
