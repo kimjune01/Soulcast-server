@@ -1,91 +1,39 @@
 class Video < ActiveRecord::Base
   belongs_to :message
+  belongs_to :user
 
-  validates :video_key, presence: true, uniqueness: true
+  # validates :video_key, presence: true, uniqueness: true
   validates :epoch,    presence: true
   # validates :user_id,  presence: true
 
-  after_create :transcode
-
-  def punch
-  	puts "punchy punchy ow ow!"
-  end
+  # before_save :transcode
+  after_save :savedAfterTranscodeRequest
 
   def transcode
-  	# Make a transcode method that takes in params from video object
-  	# Write a test that verifies the presence of a job ID
-  	# video.jobId = response[:jobID]
-
-  	AWS.config({
-:access_key_id => 'AKIAIBXNYZVUPKVS6BHA',
-:secret_access_key => 'lQRZ/ql7zt5zX/H1592RoKmDkrlf/2CAdlR9SJ1o',
-:region => 'us-west-2',
-})
-
-# This is the ID of the Elastic Transcoder pipeline that was created when
-# setting up your AWS environment:
-# http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/sample-code.html#ruby-pipeline
-pipeline_id = '1403931885121-2js8o0'
-
-# This is the name of the input key that you would like to transcode.
-input_key = 'raw/june0007.mov'
-
-# Region where the sample will be run
-region = 'us-west-2'
-
-# HLS Presets that will be used to create an adaptive bitrate playlist.
-hls_64k_audio_preset_id = '1351620000001-200071';
-hls_0400k_preset_id     = '1351620000001-200050';
-hls_0600k_preset_id     = '1351620000001-200040';
-hls_1000k_preset_id     = '1351620000001-200030';
-hls_1500k_preset_id     = '1351620000001-200020';
-hls_2000k_preset_id     = '1351620000001-200010';
-
-# HLS Segment duration that will be targeted.
-segment_duration = '2'
-
-#All outputs will have this prefix prepended to their output key.
-output_key_prefix = 'elastic-transcoder-samples/output/hls/'
-
-# Create the client for Elastic Transcoder.
-transcoder_client = AWS::ElasticTranscoder::Client.new(region: region)
-
-# Setup the job input using the provided input key.
-input = { key: input_key }
-
-#Setup the job outputs using the HLS presets.
-output_key = Digest::SHA256.hexdigest(input_key.encode('UTF-8'))
-
-hls_400k = {
-  key: 'hls0400k/' + output_key,
-  preset_id: hls_0400k_preset_id,
-  segment_duration: segment_duration
-}
-
-hls_1000k = {
-  key: 'hls1000k/' + output_key,
-  preset_id: hls_1000k_preset_id,
-  segment_duration: segment_duration
-}
-
-outputs = [hls_400k]
-playlist = {
-  name: 'hls_' + output_key,
-  format: 'HLSv3',
-  output_keys: outputs.map { |output| output[:key] }
-}
-
-job = transcoder_client.create_job(
-  pipeline_id: pipeline_id,
-  input: input,
-  output_key_prefix: output_key_prefix + output_key + '/',
-  outputs: outputs,
-  playlists: [ playlist ])[:job]
-
- puts 'HLS job has been created: ' + JSON.pretty_generate(job)
-
-self.jobID = job[:id]
-
+  	transcoder = Transcoder.new
+  	self.jobID = transcoder.transcode(self)
   end
 
+  def mark_as_transcoded!
+    self.transcoded = true
+    #give it its webm and hls values
+    region = 'us-west-2'
+    amazonHost = 'https://s3-' + region + '.amazonaws.com'
+    bucketName = 'supman'
+    pipelineName = 'kinder'
+    hlsPrefix = 'hls_'
+    hlsSuffix = '.m3u8'
+    webmPrefix = 'webm_'
+
+    # /webm_june0008out
+    self.webm = amazonHost + '/' + bucketName + '/' + pipelineName + '/' + webmPrefix + self.video_key
+    self.hls = amazonHost + '/' + bucketName + '/' + pipelineName + '/' + hlsPrefix + self.video_key + hlsSuffix;
+    #save it
+
+    self.save!
+  end
+
+  def savedAfterTranscodeRequest
+
+  end
 end
