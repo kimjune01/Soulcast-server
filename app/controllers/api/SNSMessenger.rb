@@ -2,23 +2,20 @@ class SNSMessenger
 
   def initialize
     @sns = AWS::SNS.new
-    @platformAppArn = 'arn:aws:sns:us-west-2:503476828113:app/APNS_SANDBOX/CamvySup'
+    @platformAppArn = 'arn:aws:sns:us-west-2:503476828113:app/APNS_SANDBOX/CamvyStory'
   end
 
 
-  def messageOriginalDevice(video)
+  def message_original_device(video)
     
-    video.token = '79b149183b7292bf0e609812ef2a8ceb67a0fa785e00dd017131389b2b61f9e2'
-
     clientResponse = @sns.client.create_platform_endpoint  \
       :platform_application_arn => @platformAppArn,  \
-      :token => video.token, \
-      :custom_user_data => video.name
+      :token => video.user.token, \
+      :custom_user_data => video.user.name
     
-    message = {APNS_SANDBOX: {:aps => { "webm" => video.webm, "hls" => video.hls }}.to_json}
+    message = {APNS_SANDBOX: {:aps => video.attributes }.to_json}
 
     begin
-      binding.pry
       @sns.client.publish \
       :message => message.to_json, \
       :target_arn => clientResponse[:endpoint_arn], \

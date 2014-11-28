@@ -6,6 +6,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :phone
       t.boolean :verified, :default => false
       t.string :token, :unique
+      t.string :endpoint_arn, :unique
 
       t.timestamps null: false
     end

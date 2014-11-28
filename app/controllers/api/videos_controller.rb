@@ -2,8 +2,7 @@ require 'pry'
 class Api::VideosController < ApplicationController
  protect_from_forgery :except => :catch 
  before_filter :respond_to_aws_sns_subscription_confirmations, only: [:create]
-	# POST /users
-  # POST /users.json
+	
   def index
     @allVideos = Video.all
     puts @allVideos.size
@@ -12,28 +11,39 @@ class Api::VideosController < ApplicationController
 
 
   def create
-    @video = Video.new(video_params)
-
-    respond_to do |format|
-      if @video.save
-        @video.transcode
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render :show, status: :created, location: @user }
-      else
-        format.html { render :new }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
+    #read the token, find user by token
+    @user = User.find_by(token: user_params[:token])
+    if @user
+      @video = @user.videos.create(video_params)
+    else # TODO: handle no token error gracefully
+      @user = User.last
+      @video = @user.videos.create(video_params)
+      
+    end
+    
+    #
+    
+    # when we create a video, it is lacking a user. Create through user.
+    @video.generate_vanity_animal
+    if @video.save
+      @video.transcode
+      render json: @video
+    else
+      render json: {error => 'could not save'}
     end
   end
 
+  def user_params
+    params.require(:video).permit(:token)
+  end
 
   def video_params
-    params.require(:video).permit(:video_id, :epoch, :user, :vanity, :hls, :webm, :title, :public_shared, :transcoded);
+    params.require(:video).permit(:video_key, :epoch, :user, :vanity, :hls, :webm, :title, :public_shared, :transcoded);
   end
 
   def catch
     snsRequest = request
-    # binding.pry
+
     if snsRequest.headers['HTTP_X_AMZ_SNS_MESSAGE_TYPE'] == 'Notification'
       if snsRequest.headers['HTTP_X_AMZ_SNS_TOPIC_ARN'].include? 'arn:aws:sns:us-west-2'
         snsBody = JSON.parse(snsRequest.body.read)
@@ -55,42 +65,21 @@ class Api::VideosController < ApplicationController
   end
 
   def videoDidTranscode (snsMessage)
-    
+    @video = Video.find_by jobID: snsMessage['jobId']
     if snsMessage['state'] == "ERROR"
-
       handle(snsMessage['outputs'].first['errorCode'])
+      ###@video.message_original_device("transcoding error: #{snsMessage['outputs'].first['errorCode']}")
     elsif snsMessage['state'] == "COMPLETED"
-      puts "Transcoding successful!"
-      #write a test for green path
-      #find video by jobID
-      
+      puts "Transcoding successful!"      
       @video = Video.find_by jobID: snsMessage['jobId']
-      #assign its transcoded to true
-
-      @video.mark_as_transcoded!
+      @video.transcoded = true
+      @video.save!
       # all the work below and calls save!
-
-
-      # messenger = SNSMessenger.new
-      # messenger.messageOriginalDevice(video)
-      
-      # binding.pry
-
-
+      ###@video.message_original_device('trasncoding completed')
     end
   end
 
-  def sendSNS
-    snsClient = AWS::SNS.new
-    #make a topic
-    arn = 
-    snsTopic = AWS::SNS::Topic.initialize()
-    #subscribe #subscribe to topic
-    #publish to topic
-    #unsubscribe #subscribe from topic
-    #remove topic
-    
-  end
+  
 
   def subscribe
     @subscribeRequest = request

@@ -1,0 +1,21 @@
+test:
+  region: us-west-2
+  pipeline_id: 1403931885121-2js8o0
+  output_bucket: supman
+  input_bucket: camvybucket
+  pipeline_name: kinder
+  platformAppArn: arn:aws:sns:us-west-2:503476828113:app/APNS_SANDBOX/CamvyStory
+development:
+  region: us-west-2
+  pipeline_id: 1403931885121-2js8o0
+  output_bucket: supman
+  input_bucket: camvybucket
+  pipeline_name: kinder
+  platformAppArn: arn:aws:sns:us-west-2:503476828113:app/APNS_SANDBOX/CamvyStory
+production:
+  region: us-west-2
+  pipeline_id: 1403931885121-2js8o0
+  output_bucket: supman
+  input_bucket: camvybucket
+  pipeline_name: kinder
+  platformAppArn: arn:aws:sns:us-west-2:503476828113:app/APNS_SANDBOX/CamvyStory

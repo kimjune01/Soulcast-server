@@ -32,11 +32,12 @@ ActiveRecord::Schema.define(version: 20141029020746) do
     t.string   "name"
     t.string   "email"
     t.string   "phone"
-    t.boolean  "verified",   default: false
+    t.boolean  "verified",     default: false
     t.string   "token"
     t.string   "unique"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.string   "endpoint_arn"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
   end
 
   create_table "videos", force: true do |t|

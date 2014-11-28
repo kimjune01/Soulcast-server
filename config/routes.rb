@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     post 'sns', to: 'videos#catch'
   end
 
+  resources :videos, param: :vanity
   
 
   # The priority is based upon order of creation: first created -> highest priority.

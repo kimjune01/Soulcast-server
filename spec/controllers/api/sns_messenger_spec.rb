@@ -4,10 +4,10 @@ describe Api::VideosController do
   before :each do
     Video.destroy_all
     User.destroy_all
-    @jimmy = User.create name:"shimmy#{Time.new.inspect}", token: '79b149183b7292bf0e609812ef2a8ceb67a0fa785e00dd017131389b2b61f9e2'
+    @jimmy = User.create name:"shimmy#{Time.new.inspect}", token: 'sampletoken'
     @jimmyVideo = @jimmy.videos.create video_key: "video#{Time.new.inspect}", epoch: 5432345 , webm: "http://www.webm.com", hls: "http://www.hls.com"
     @sns = AWS::SNS.new
-    @platformAppArn = 'arn:aws:sns:us-west-2:503476828113:app/APNS_SANDBOX/CamvySup'
+    @platformAppArn = 'arn:aws:sns:us-west-2:503476828113:app/APNS_SANDBOX/CamvyStory'
     
   end
 
