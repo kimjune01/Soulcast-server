@@ -4,8 +4,22 @@ class Api::UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @users = User.all
-  end
+    if params[:phone]
+      puts params[:phone]
+      if @user = User.find_by(phone: params[:phone])
+        binding.pry
+        render json:@user
+      else
+        binding.pry
+        render nothing: true, status: 404
+      end
+        
+    else
+      @users = User.all
+      puts @users
+      render json: @users  end
+    end
+
 
   # GET /users/1
   # GET /users/1.json
@@ -24,17 +38,17 @@ class Api::UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
-    @user = User.new(user_params)
+    @user = User.find_by(token: params[:token])
 
-    respond_to do |format|
-      if @user.save
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render :show, status: :created, location: @user }
-      else
-        format.html { render :new }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
+    binding.pry
+    
+    if @user.save
+      render json: @user
+    else
+      render json: {error => 'could not save'} 
     end
+    
+
   end
 
   # PATCH/PUT /users/1

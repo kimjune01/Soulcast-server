@@ -10,6 +10,7 @@ gem 'rspec-rails'
 gem 'rails', '4.2.0.beta2'
 gem 'global'
 gem "browser"
+gem 'videojs_rails'
 
 gem 'pg'
 # Use SCSS for stylesheets

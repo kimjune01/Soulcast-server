@@ -68,14 +68,14 @@ class Api::VideosController < ApplicationController
     @video = Video.find_by jobID: snsMessage['jobId']
     if snsMessage['state'] == "ERROR"
       handle(snsMessage['outputs'].first['errorCode'])
-      ###@video.message_original_device("transcoding error: #{snsMessage['outputs'].first['errorCode']}")
+      @video.message_original_device("transcoding error: #{snsMessage['outputs'].first['errorCode']}")
     elsif snsMessage['state'] == "COMPLETED"
       puts "Transcoding successful!"      
       @video = Video.find_by jobID: snsMessage['jobId']
       @video.transcoded = true
       @video.save!
       # all the work below and calls save!
-      ###@video.message_original_device('trasncoding completed')
+      @video.message_original_device('trasncoding completed')
     end
   end
 

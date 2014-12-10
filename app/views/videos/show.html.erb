@@ -1,10 +1,10 @@
+
+
+
 <% if browser.safari? %>
 <video src="<%= @video.mp4_link %>" controls autoplay  ></video>
 
 <% else %>
-<video src="<%= @video.webm_link %>" controls autoplay  ></video>
+<video src="<%= @video.webm_link %>" controls autoplay > </video>
 
 <% end %>
-
-
-
