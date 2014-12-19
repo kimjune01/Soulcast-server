@@ -3,14 +3,13 @@ source 'https://rubygems.org'
 gem 'aws-sdk'
 gem "aws_sns_subscription"
 gem 'proxylocal'
-
+gem 'arel', '6.0.0.beta2'
 gem 'rspec-rails'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 
 gem 'rails', '4.2.0.beta2'
 gem 'global'
 gem "browser"
-gem 'videojs_rails'
 
 gem 'pg'
 # Use SCSS for stylesheets

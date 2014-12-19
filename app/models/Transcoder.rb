@@ -29,7 +29,7 @@ class Transcoder
 		hls_1000k = { key: 'hls1000k/' + output_key, preset_id: hls_1000k_preset_id, segment_duration: segment_duration }
 		webm = { key: 'webm_' + output_key, preset_id: webm_preset_id }
 
-		hls_outputs = [hls_400k] #hls_1000k not used for now
+		hls_outputs = [hls_1000k] #hls_400k not used for now
 		webm_outputs = [webm]
 
 		hls_playlist = {

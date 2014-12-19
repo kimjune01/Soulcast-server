@@ -32,6 +32,9 @@ class SNSMessenger
     end
       
       
+    def silent_ping_device(user)
+      
+    end
 
 
 

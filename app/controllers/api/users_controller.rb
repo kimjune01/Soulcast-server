@@ -4,16 +4,16 @@ class Api::UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
+    puts params
     if params[:phone]
-      puts params[:phone]
+      
       if @user = User.find_by(phone: params[:phone])
-        binding.pry
         render json:@user
       else
-        binding.pry
-        render nothing: true, status: 404
+        @user = User.new(phone: params[:phone], token: params[:token])
+        render json:@user
       end
-        
+        @user.save!
     else
       @users = User.all
       puts @users
@@ -38,17 +38,15 @@ class Api::UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
-    @user = User.find_by(token: params[:token])
-
-    binding.pry
-    
-    if @user.save
-      render json: @user
+    @user = User.find_by(token: params[:user][:token])
+    if @user
+      @user.phone = params[:user][:phone]
     else
-      render json: {error => 'could not save'} 
+      @user = User.new(token: params[:user][:token], phone: params[:user][:phone])
     end
-    
-
+    @user.create_endpoint_arn
+    @user.save!
+    render json: @user 
   end
 
   # PATCH/PUT /users/1

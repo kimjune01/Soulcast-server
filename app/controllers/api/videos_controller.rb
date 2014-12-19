@@ -20,11 +20,17 @@ class Api::VideosController < ApplicationController
       @video = @user.videos.create(video_params)
       
     end
-    
-    #
-    
     # when we create a video, it is lacking a user. Create through user.
+    @recipient = User.find_by(phone: params[:video][:recipient_phone].split(//).last(10).join)
+    if @recipient && @recipient.is_on_camvy
+      @video.via = :apns
+    else
+      @video.via = :sns
+    end
+
+    @video.recipient = params[:video][:recipient_phone]
     @video.generate_vanity_animal
+    
     if @video.save
       @video.transcode
       render json: @video
@@ -43,7 +49,6 @@ class Api::VideosController < ApplicationController
 
   def catch
     snsRequest = request
-
     if snsRequest.headers['HTTP_X_AMZ_SNS_MESSAGE_TYPE'] == 'Notification'
       if snsRequest.headers['HTTP_X_AMZ_SNS_TOPIC_ARN'].include? 'arn:aws:sns:us-west-2'
         snsBody = JSON.parse(snsRequest.body.read)
@@ -65,17 +70,26 @@ class Api::VideosController < ApplicationController
   end
 
   def videoDidTranscode (snsMessage)
+    
     @video = Video.find_by jobID: snsMessage['jobId']
     if snsMessage['state'] == "ERROR"
       handle(snsMessage['outputs'].first['errorCode'])
       @video.message_original_device("transcoding error: #{snsMessage['outputs'].first['errorCode']}")
+      
     elsif snsMessage['state'] == "COMPLETED"
       puts "Transcoding successful!"      
       @video = Video.find_by jobID: snsMessage['jobId']
       @video.transcoded = true
+      @video.hls = @video.hls_link
       @video.save!
       # all the work below and calls save!
-      @video.message_original_device('trasncoding completed')
+      if @video.via == 'sns'
+        @video.message_original_device('transcoding completed')
+      end
+      if  @video.via == 'apns'
+        @video.message_recipient_device('transcoding completed')
+      end
+      
     end
   end
 
