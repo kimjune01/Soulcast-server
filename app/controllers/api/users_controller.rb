@@ -16,9 +16,9 @@ class Api::UsersController < ApplicationController
         @user.save!
     else
       @users = User.all
-      puts @users
-      render json: @users  end
+      render json: @users  
     end
+  end
 
 
   # GET /users/1
@@ -38,6 +38,23 @@ class Api::UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
+    #check for json
+    if params.include? "somePhoneContacts"
+      somePhoneNumbersHash = params["somePhoneContacts"]
+      somePhoneNumbers = []
+      for numberHash in somePhoneNumbersHash
+        somePhoneNumbers.push(numberHash["phone"].split(//).last(10).join)
+      end
+      existingUsers = User.where(phone: somePhoneNumbers)
+      someUsers = []
+      for user in existingUsers
+        someUsers.push(user.phone)
+      end
+      render json: someUsers
+      return
+    end
+    
+    #
     @user = User.find_by(token: params[:user][:token])
     if @user
       @user.phone = params[:user][:phone]

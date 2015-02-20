@@ -70,8 +70,8 @@ class Api::VideosController < ApplicationController
   end
 
   def videoDidTranscode (snsMessage)
-    
     @video = Video.find_by jobID: snsMessage['jobId']
+    puts snsMessage['state']
     if snsMessage['state'] == "ERROR"
       handle(snsMessage['outputs'].first['errorCode'])
       @video.message_original_device("transcoding error: #{snsMessage['outputs'].first['errorCode']}")

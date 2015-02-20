@@ -7,13 +7,12 @@ class SNSMessenger
 
 
   def message_original_device(video)
-    
     clientResponse = @sns.client.create_platform_endpoint  \
       :platform_application_arn => @platformAppArn,  \
       :token => video.user.token, \
       :custom_user_data => video.user.name
-    
-    message = {APNS_SANDBOX: {:aps => video.attributes }.to_json}
+    hash = {"video" => video.attributes, "sender" => video.user.attributes}
+    message = {APNS_SANDBOX: {:aps => hash }.to_json}
 
     begin
       @sns.client.publish \

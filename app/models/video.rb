@@ -48,13 +48,11 @@ class Video < ActiveRecord::Base
 
   def alt_message_device(message = 'rawr')
     messenger = SNSMessenger.new
-    binding.pry
   end
 
 
   def message_original_device(message = 'rawr')
-    hash = {:video => self.attributes, :alert => 'Camvy Story Push!', :sound => 'default'}
-    message = {APNS_SANDBOX: {:aps => hash }.to_json}
+    message = {APNS_SANDBOX: {:aps => original_device_hash }.to_json}
     #message needs alert!!
     begin
       publishResponse = AWS::SNS.new.client.publish \
@@ -74,8 +72,8 @@ class Video < ActiveRecord::Base
 
   def message_recipient_device(message = 'rawr')
     @recipient = User.find_by(phone: self.recipient)
-    hash = {:video => self.attributes, :alert => "Someone sent you a message!", :sound => 'default'}
-    message = {APNS_SANDBOX: {:aps => hash }.to_json}
+    #hash = {:video => self.attributes, :sender => self.user.attributes, :alert => "Someone sent you a message!", :sound => 'default'}
+    message = {APNS_SANDBOX: {:aps => recipient_hash }.to_json}
     
     begin
       publishResponse = AWS::SNS.new.client.publish \
@@ -86,11 +84,18 @@ class Video < ActiveRecord::Base
       #deleted app, clear out device token
       Rails.logger.warn("#{@recipient.name} has disabled token #{self.user.token}: #{e.message}")
       #@sns.client.delete_endpoint(:endpoint_arn => clientResponse[:endpoint_arn])
-      binding.pry
     rescue AWS::SNS::Errors::InvalidParameter => e
       #means endpoint no longer exists, delete user
       Rails.logger.warn("#{@recipient.name} should be deleted: #{e.message}")
     end
+  end
+
+  def recipient_hash
+    {:video => self.attributes, :sender => self.user.attributes, :alert => "Someone sent you a message!", :sound => 'default'}
+  end
+
+  def original_device_hash
+     {:video => self.attributes, :origin => 'self', :alert => "Send the message to your friends!", :sound => 'default'}
   end
 
   def host

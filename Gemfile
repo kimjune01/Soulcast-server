@@ -6,6 +6,7 @@ gem 'proxylocal'
 gem 'arel', '6.0.0.beta2'
 gem 'rspec-rails'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'videojs_rails'
 
 gem 'rails', '4.2.0.beta2'
 gem 'global'

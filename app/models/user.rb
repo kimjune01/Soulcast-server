@@ -30,10 +30,10 @@ class User < ActiveRecord::Base
   end
 
   def is_on_camvy
-    
+    #TODO: don't actually send a message, installation test
 
     begin
-      message = {APNS_SANDBOX: {:aps => {'content-available' => 1, 'is_on_camvy' => '???'} }.to_json}
+      message = {APNS_SANDBOX: {:aps => {'content-available' => 1} }.to_json}
       publishResponse = AWS::SNS.new.client.publish \
       :message => message.to_json, \
       :target_arn => self.endpoint_arn, \
