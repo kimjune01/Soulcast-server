@@ -63,7 +63,6 @@ class Video < ActiveRecord::Base
       #deleted app, clear out device token
       Rails.logger.warn("#{self.user.name} has disabled token #{self.user.token}: #{e.message}")
       #@sns.client.delete_endpoint(:endpoint_arn => clientResponse[:endpoint_arn])
-      binding.pry
     rescue AWS::SNS::Errors::InvalidParameter => e
       #means endpoint no longer exists, delete user
       Rails.logger.warn("#{self.user.name} should be deleted: #{e.message}")

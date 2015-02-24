@@ -62,7 +62,9 @@ class Api::UsersController < ApplicationController
       @user = User.new(token: params[:user][:token], phone: params[:user][:phone])
     end
     @user.create_endpoint_arn
+    @user.name = params[:user][:fullName]
     @user.save!
+    puts json: @user 
     render json: @user 
   end
 

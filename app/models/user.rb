@@ -23,15 +23,12 @@ class User < ActiveRecord::Base
       :custom_user_data => self.phone
       self.endpoint_arn = clientResponse[:endpoint_arn]
     rescue Exception => e
-      binding.pry
-      #endpoint already exists! What to do? TODO
+      #endpoint already exists! What to do? do nothing.
     end
 
   end
 
   def is_on_camvy
-    #TODO: don't actually send a message, installation test
-
     begin
       message = {APNS_SANDBOX: {:aps => {'content-available' => 1} }.to_json}
       publishResponse = AWS::SNS.new.client.publish \

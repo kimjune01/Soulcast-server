@@ -15,12 +15,11 @@ class Api::VideosController < ApplicationController
     @user = User.find_by(token: user_params[:token])
     if @user
       @video = @user.videos.create(video_params)
-    else # TODO: handle no token error gracefully
-      @user = User.last
-      @video = @user.videos.create(video_params)
-      
+    else 
+      # @user = User.last
+      # @video = @user.videos.create(video_params)
+      render json: {error => 'could not create: token not found'}
     end
-    # when we create a video, it is lacking a user. Create through user.
     @recipient = User.find_by(phone: params[:video][:recipient_phone].split(//).last(10).join)
     if @recipient && @recipient.is_on_camvy
       @video.via = :apns
@@ -77,10 +76,12 @@ class Api::VideosController < ApplicationController
       @video.message_original_device("transcoding error: #{snsMessage['outputs'].first['errorCode']}")
       
     elsif snsMessage['state'] == "COMPLETED"
-      puts "Transcoding successful!"      
+      puts "Transcoding successful!"   
       @video = Video.find_by jobID: snsMessage['jobId']
       @video.transcoded = true
       @video.hls = @video.hls_link
+      #@video.webm???
+
       @video.save!
       # all the work below and calls save!
       if @video.via == 'sns'
