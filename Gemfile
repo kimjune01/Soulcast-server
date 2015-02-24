@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'aws-sdk'
+gem 'aws-sdk', '1.6.1'
 gem "aws_sns_subscription"
 gem 'proxylocal'
 gem 'arel', '6.0.0.beta2'
