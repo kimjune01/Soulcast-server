@@ -17,11 +17,13 @@ class User < ActiveRecord::Base
     end
 
     begin # can only perform once per token
-      clientResponse = AWS::SNS.new.client.create_platform_endpoint  \
+      sns = Aws::SNS::Client.new(region: 'us-west-2')
+      clientResponse = sns.create_platform_endpoint  \
       :platform_application_arn => Global.all.platformAppArn,  \
       :token => self.token, \
       :custom_user_data => self.phone
       self.endpoint_arn = clientResponse[:endpoint_arn]
+      puts :endpoint_arn
     rescue Exception => e
       #endpoint already exists! What to do? do nothing.
     end
@@ -30,8 +32,9 @@ class User < ActiveRecord::Base
 
   def is_on_camvy
     begin
+      sns = Aws::SNS::Client.new(region: 'us-west-2')
       message = {APNS_SANDBOX: {:aps => {'content-available' => 1} }.to_json}
-      publishResponse = AWS::SNS.new.client.publish \
+      publishResponse = sns.publish \
       :message => message.to_json, \
       :target_arn => self.endpoint_arn, \
       :message_structure => 'json'

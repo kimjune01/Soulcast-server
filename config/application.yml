@@ -1,0 +1,4 @@
+# config/application.yml
+AWS_REGION: "us-west-2"
+AWS_ACCESS_KEY_ID: "AKIAIBXNYZVUPKVS6BHA"
+AWS_SECRET_ACCESS_KEY: "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"

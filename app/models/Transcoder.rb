@@ -9,10 +9,7 @@ class Transcoder
 			video.video_key = 'june0008'
 		end
 
-		##
-
-		region = 'us-west-2'
-		transcoder_client = AWS::ElasticTranscoder::Client.new(region: region)
+		transcoder_client = Aws::ElasticTranscoder::Client.new(region: 'us-west-2')
 
 		pipeline_id = '1403931885121-2js8o0'
 		input_key = 'raw/' + video.video_key + '.mov'

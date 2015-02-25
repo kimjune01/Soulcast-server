@@ -1,0 +1,4 @@
+module name of folder
+class name of file in camelcase
+
+TODO: refactor out AWS methods into here.

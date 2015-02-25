@@ -46,24 +46,19 @@ class Video < ActiveRecord::Base
     
   end
 
-  def alt_message_device(message = 'rawr')
-    messenger = SNSMessenger.new
-  end
-
-
   def message_original_device(message = 'rawr')
     message = {APNS_SANDBOX: {:aps => original_device_hash }.to_json}
     #message needs alert!!
     begin
-      publishResponse = AWS::SNS.new.client.publish \
+      publishResponse = Aws::SNS::Client.new(region: 'us-west-2').publish \
       :message => message.to_json, \
       :target_arn => self.user.endpoint_arn, \
       :message_structure => 'json'
-    rescue AWS::SNS::Errors::EndpointDisabled => e
+    rescue Aws::SNS::Errors::EndpointDisabled => e
       #deleted app, clear out device token
       Rails.logger.warn("#{self.user.name} has disabled token #{self.user.token}: #{e.message}")
-      #@sns.client.delete_endpoint(:endpoint_arn => clientResponse[:endpoint_arn])
-    rescue AWS::SNS::Errors::InvalidParameter => e
+      #@sns.delete_endpoint(:endpoint_arn => clientResponse[:endpoint_arn])
+    rescue Aws::SNS::Errors::InvalidParameter => e
       #means endpoint no longer exists, delete user
       Rails.logger.warn("#{self.user.name} should be deleted: #{e.message}")
     end
@@ -73,17 +68,16 @@ class Video < ActiveRecord::Base
     @recipient = User.find_by(phone: self.recipient)
     #hash = {:video => self.attributes, :sender => self.user.attributes, :alert => "Someone sent you a message!", :sound => 'default'}
     message = {APNS_SANDBOX: {:aps => recipient_hash }.to_json}
-    
     begin
-      publishResponse = AWS::SNS.new.client.publish \
+      publishResponse = Aws::SNS::Client.new(region: 'us-west-2').publish \
       :message => message.to_json, \
       :target_arn => @recipient.endpoint_arn, \
       :message_structure => 'json'
-    rescue AWS::SNS::Errors::EndpointDisabled => e
+    rescue Aws::SNS::Errors::EndpointDisabled => e
       #deleted app, clear out device token
       Rails.logger.warn("#{@recipient.name} has disabled token #{self.user.token}: #{e.message}")
-      #@sns.client.delete_endpoint(:endpoint_arn => clientResponse[:endpoint_arn])
-    rescue AWS::SNS::Errors::InvalidParameter => e
+      #@sns.delete_endpoint(:endpoint_arn => clientResponse[:endpoint_arn])
+    rescue Aws::SNS::Errors::InvalidParameter => e
       #means endpoint no longer exists, delete user
       Rails.logger.warn("#{@recipient.name} should be deleted: #{e.message}")
     end

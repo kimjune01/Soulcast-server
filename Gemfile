@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'aws-sdk', '1.6.1'
+gem 'aws-sdk', '~> 2'
 gem "aws_sns_subscription"
 gem 'proxylocal'
 gem 'arel', '6.0.0.beta2'
@@ -11,7 +11,7 @@ gem 'videojs_rails'
 gem 'rails', '4.2.0.beta2'
 gem 'global'
 gem "browser"
-
+gem 'figaro'
 gem 'pg'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0.0.beta1'
