@@ -18,7 +18,9 @@ class Api::VideosController < ApplicationController
     else 
       # @user = User.last
       # @video = @user.videos.create(video_params)
-      render json: {error => 'could not create: token not found'}
+      @user = User.new(phone: '1111111111' token: user_params[:token])
+      puts 'could not create: token not found'
+      render json: {:error => 'could not create: token not found'}
     end
     @recipient = User.find_by(phone: params[:video][:recipient_phone].split(//).last(10).join)
     if @recipient && @recipient.is_on_camvy
