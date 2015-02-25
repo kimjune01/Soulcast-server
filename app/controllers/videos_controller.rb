@@ -5,5 +5,11 @@ class VideosController < ApplicationController
     
   end
 
+  def index
+    @allVideos = Video.all
+    puts @allVideos.size
+    render json: @allVideos
+  end
+
 
 end
