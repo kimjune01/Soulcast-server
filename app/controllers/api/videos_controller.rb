@@ -18,7 +18,7 @@ class Api::VideosController < ApplicationController
     else 
       # @user = User.last
       # @video = @user.videos.create(video_params)
-      @user = User.new(phone: '1111111111' token: user_params[:token])
+      @user = User.new(phone: '1111111111', token: user_params[:token])
       puts 'could not create: token not found'
       render json: {:error => 'could not create: token not found'}
     end
