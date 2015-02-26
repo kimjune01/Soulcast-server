@@ -4,6 +4,7 @@ test:
   output_bucket: supman
   input_bucket: camvybucket
   pipeline_name: kinder
+  push_protocol: APNS_SANDBOX
   platformAppArn: arn:aws:sns:us-west-2:503476828113:app/APNS_SANDBOX/CamvyStory
 development:
   region: us-west-2
@@ -11,6 +12,7 @@ development:
   output_bucket: supman
   input_bucket: camvybucket
   pipeline_name: kinder
+  push_protocol: APNS_SANDBOX
   platformAppArn: arn:aws:sns:us-west-2:503476828113:app/APNS_SANDBOX/CamvyStory
 production:
   region: us-west-2
@@ -18,4 +20,5 @@ production:
   output_bucket: supman
   input_bucket: camvybucket
   pipeline_name: kinder
+  push_protocol: APNS
   platformAppArn: arn:aws:sns:us-west-2:503476828113:app/APNS_SANDBOX/CamvyStory

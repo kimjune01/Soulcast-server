@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
   def is_on_camvy
     begin
       sns = Aws::SNS::Client.new(region: 'us-west-2')
-      message = {APNS_SANDBOX: {:aps => {'content-available' => 1} }.to_json}
+      message = {Global.all.push_protocol => {:aps => {'content-available' => 1} }.to_json}
       publishResponse = sns.publish \
       :message => message.to_json, \
       :target_arn => self.endpoint_arn, \

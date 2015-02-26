@@ -47,7 +47,7 @@ class Video < ActiveRecord::Base
   end
 
   def message_original_device(message = 'rawr')
-    message = {APNS_SANDBOX: {:aps => original_device_hash }.to_json}
+    message = {Global.all.push_protocol => {:aps => original_device_hash }.to_json}
     #message needs alert!!
     begin
       publishResponse = Aws::SNS::Client.new(region: 'us-west-2').publish \
@@ -67,7 +67,7 @@ class Video < ActiveRecord::Base
   def message_recipient_device(message = 'rawr')
     @recipient = User.find_by(phone: self.recipient)
     #hash = {:video => self.attributes, :sender => self.user.attributes, :alert => "Someone sent you a message!", :sound => 'default'}
-    message = {APNS_SANDBOX: {:aps => recipient_hash }.to_json}
+    message = {Global.all.push_protocol => {:aps => recipient_hash }.to_json}
     begin
       publishResponse = Aws::SNS::Client.new(region: 'us-west-2').publish \
       :message => message.to_json, \
