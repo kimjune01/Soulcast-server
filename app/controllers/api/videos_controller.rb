@@ -54,6 +54,12 @@ class Api::VideosController < ApplicationController
 
   def catch
     snsRequest = request
+    puts snsRequest
+    if snsRequest.headers['HTTP_X_AMZ_SNS_MESSAGE_TYPE'] == "SubscriptionConfirmation" 
+      #confirm subscription.
+      puts (HTTParty.get(JSON.parse(snsRequest.body.string)['SubscribeURL']))['ConfirmSubscriptionResponse']['ConfirmSubscriptionResult']
+      
+    end
     if snsRequest.headers['HTTP_X_AMZ_SNS_MESSAGE_TYPE'] == 'Notification'
       if snsRequest.headers['HTTP_X_AMZ_SNS_TOPIC_ARN'].include? 'arn:aws:sns:us-west-2'
         snsBody = JSON.parse(snsRequest.body.read)
@@ -63,6 +69,7 @@ class Api::VideosController < ApplicationController
         end
       end
     end
+
     render :nothing => true, :status => 200, :content_type => 'text/html'
   end
 
