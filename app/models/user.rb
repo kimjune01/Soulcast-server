@@ -40,10 +40,10 @@ class User < ActiveRecord::Base
       :message_structure => 'json'
       puts publishResponse
       true
-    rescue AWS::SNS::Errors::EndpointDisabled => e
+    rescue Aws::SNS::Errors::EndpointDisabled => e
       #deleted app, clear out device token
       false
-    rescue AWS::SNS::Errors::InvalidParameter => e
+    rescue Aws::SNS::Errors::InvalidParameter => e
       #means endpoint no longer exists, delete user
       false
     end

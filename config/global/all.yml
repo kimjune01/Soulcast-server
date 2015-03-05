@@ -21,4 +21,4 @@ production:
   input_bucket: camvybucket
   pipeline_name: kinder
   push_protocol: APNS
-  platformAppArn: arn:aws:sns:us-west-2:503476828113:app/APNS_SANDBOX/CamvyStory
+  platformAppArn: arn:aws:sns:us-west-2:503476828113:app/APNS/CamvyFeb
