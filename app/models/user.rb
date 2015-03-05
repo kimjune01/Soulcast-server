@@ -20,8 +20,8 @@ class User < ActiveRecord::Base
       sns = Aws::SNS::Client.new(region: 'us-west-2')
       clientResponse = sns.create_platform_endpoint  \
       :platform_application_arn => Global.all.platformAppArn,  \
-      :token => self.token, \
-      :custom_user_data => self.phone
+      :token => self.token
+      #:custom_user_data => self.phone
       self.endpoint_arn = clientResponse[:endpoint_arn]
       puts :endpoint_arn
     rescue Exception => e
